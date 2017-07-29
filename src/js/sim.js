@@ -50,11 +50,11 @@ class Sim {
         this.state.alive = false;
         this.state.hunger = 0;
         this.state.sanity = 0;
+        this.state.warmth = 0;
         this.state.hungerSlope = 0;
         this.state.sanitySlope = 0;
+        this.state.warmthSlope = 0;
         this.state.deathCauses = deathCauses;
-
-        // left warmth off because corpse still holds heat ~_~
     }
     checkStateChange(stateChange) {
         const violations = [];

@@ -155,7 +155,12 @@ class PlayState extends Phaser.State {
         });
 
         // heater handlers
-        this.sprites.heater.events.onInputDown.add(this.sim.toggleHeater, this.sim);
+        this.sprites.heater.events.onInputDown.add(() => {
+            // only turn on heater if generator is on already
+            if (this.sim.state.generator) {
+                this.sim.toggleHeater();
+            }
+        }, this.sim);
         this.sprites.heater.events.onInputDown.add(() => {
             if (this.sim.state.heater) {
                 this.sounds.heater.play();
