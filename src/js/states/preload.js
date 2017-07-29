@@ -11,15 +11,28 @@ class PreloadState extends Phaser.State {
         const assetManifest = {
             image: [
                 ['logo', 'images/big/logo.png'],
-                ['intro', 'images/big/intro.png'],
-                ['game-over', 'images/big/game-over.png'],
-                ['playing', 'images/big/playing.png'],
-                ['btn', 'images/big/btn.png'],
+                ['background', 'images/big/background.png'],
+                ['cabin', 'images/big/cabin.png'],
+                ['chair', 'images/big/chair.png'],
+                ['cupboard', 'images/big/cupboard.png'],
+                ['fuel', 'images/big/fuel.png'],
+                ['generator', 'images/big/generator.png'],
+                ['heater', 'images/big/heater.png'],
+                ['mountain', 'images/big/mountain.png'],
+                ['smoke', 'images/big/smoke.png'],
+                ['you', 'images/big/you.png'],
             ],
             spritesheet: [
-                ['btn-play', 'images/big/button-play.png', 64*10, 24*10],
+                // ['btn-play', 'images/big/button-play.png', 64*10, 24*10],
             ],
             audio: [
+                ['music', 'sounds/melody.wav'],
+                ['insanity', 'sounds/insanity.wav'],
+                ['heater', 'sounds/heater.wav'],
+                ['heater-off', 'sounds/heater-off.wav'],
+                ['generator', 'sounds/generator.wav'],
+                ['generator-empty', 'sounds/generator-empty.wav'],
+                ['generator-off', 'sounds/generator-off.wav'],
             ],
         };
 

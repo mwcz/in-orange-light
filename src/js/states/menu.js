@@ -22,7 +22,7 @@ class MenuState extends Phaser.State {
         const btnHum = this.game.add.button(
             this.game.world.centerX,
             this.game.world.height - 130,
-            'btn',
+            'logo',
             this.next,
             this,
             1, // over

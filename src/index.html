@@ -28,14 +28,20 @@
                 width: 100%;
                 overflow: hidden;
                 color: white;
-                cursor: url('./images/cursor.png') 15 17, crosshair !important;
+                /* cursor: url('./images/cursor.png') 15 17, crosshair !important; */
             }
             canvas {
                 margin: 0 auto;
             }
+            #debug {
+                position: absolute;
+                top: 0; left: 0;
+            }
         </style>
     </head>
     <body>
+
+        <pre id="debug"></pre>
 
         <!-- third party -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
@@ -46,11 +52,11 @@
 
         <!-- first party -->
         <script src="js/config.js"></script>
+        <script src="js/sim.js"></script>
         <script src="js/states/boot.js"></script>
         <script src="js/states/preload.js"></script>
         <script src="js/states/menu.js"></script>
         <script src="js/states/play.js"></script>
-        <script src="js/states/score.js"></script>
         <script src="js/game.js"></script>
         <script src="js/main.js"></script>
 
