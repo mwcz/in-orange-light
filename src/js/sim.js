@@ -41,9 +41,9 @@ class Sim {
 
         // // update warmth
         // this.state.warmth += this.state.warmthSlope;
-        const violations = this.applyStateChange(config.STATE_CHANGES.update);
+        const updateResults = this.applyStateChange(config.STATE_CHANGES.update, true);
         document.querySelector('#debug').textContent = JSON.stringify(this.state, null, 4);
-        return violations;
+        return updateResults;
     }
     endLife(deathCauses) {
         // set props to death states
@@ -80,7 +80,7 @@ class Sim {
                 }
 
                 const newValue = this.state[k] + change;
-                if (newValue < config.BOUNDS[k][0]) {
+                if (newValue <= config.BOUNDS[k][0]) {
                     violations.push({
                         prop: k,
                         currentValue: this.state[k],
@@ -91,7 +91,7 @@ class Sim {
                     proceed = false;
                     // console.log(`[sim] ${k} can't be set to ${newValue}, it is below ${config.BOUNDS[k][0]}`);
                 }
-                if (newValue > config.BOUNDS[k][1]) {
+                if (newValue >= config.BOUNDS[k][1]) {
                     violations.push({
                         prop: k,
                         current: this.state[k],
@@ -106,7 +106,7 @@ class Sim {
         );
         return violations;
     }
-    applyStateChange(stateChange) {
+    applyStateChange(stateChange, force) {
         const violations = this.checkStateChange(stateChange);
 
         // catch any violations that cause death and react accordingly
@@ -118,16 +118,19 @@ class Sim {
             this.endLife(deathCauses);
         }
 
-        // if all props are still within valid bounds, loop again and apply the new values
-        if (violations.length) {
-            return violations;
+        // if applying the state change would cause any violations, exit early
+        // and return the violations, unless forced, then apply only the
+        // updates that don't cause violations
+        if (violations.length && !force) {
+            console.log(`[sim] not applying due to violations: ${JSON.stringify(violations, null, 4)}`);
+            return { stateChange, violations };
         }
         else {
+            // if all props are still within valid bounds, loop and apply the new values
             console.log(`[sim] applying state change: ${JSON.stringify(stateChange, null, 4)}`)
             _.each(
                 stateChange,
                 (v,k,i) => {
-                    let newValue;
                     let change = v;
                     if (_.isFunction(v)) {
                         change = v.call(this);
@@ -135,17 +138,21 @@ class Sim {
 
                     if (_.isBoolean(v)) {
                         // if boolean, assign incoming value
-                        newValue = change;
+                        this.state[k] = change;
                     }
                     else {
-                        // if not boolean, add incoming value
-                        newValue = this.state[k] + change;
+                        // if not boolean, check bounds and then assign
+                        const newValue = this.state[k] + change;
+                        if (newValue >= config.BOUNDS[k][0] && newValue <= config.BOUNDS[k][1]) {
+                            this.state[k] = newValue;
+                        }
+                        else {
+                            console.log(`[sim] not updating ${k} to out-of-bounds value: ${newValue}`);
+                        }
                     }
-
-                    this.state[k] = newValue;
                 }
             );
-            return [];
+            return { stateChange, violations };
         }
     }
     print() {

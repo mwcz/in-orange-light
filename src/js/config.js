@@ -51,17 +51,16 @@ const config = Object.freeze({
             hungerSlope : 1, // hunger increases exponentially
         },
         eatFood: {
-            hunger      : -1,
+            hunger      : -2,
             hungerSlope : -10,
             food        : -1,
             sanity      : 1,
             sanitySlope : 1,
         },
         refuelGenerator: {
-            fuelReserve : -1,
-            fuelInUse   : 1,
-            sanity      : 1,
-            sanitySlope : 1,
+            fuelReserve : -10,
+            fuelInUse   : 10,
+            sanitySlope : 2,
         },
         heaterOn: {
             heater      : true,

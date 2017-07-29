@@ -51,10 +51,20 @@ class PlayState extends Phaser.State {
 
     updateSim() {
         // get the names of any actions that failed due to violating config.BOUNDS
-        const violations = _.map(this.sim.update(), 'prop');
+        const { violations, stateChange } = this.sim.update();
+        const violationProps = _.map(violations, 'prop');
 
         if (this.sim.state.deathCauses.length) {
             this.deathBy(this.sim.state.deathCauses);
+        }
+
+        // if generator is on and fuel tank is empty
+        const tankEmpty = this.sim.state.fuelInUse <= config.BOUNDS.fuelInUse[0];
+        const generatorOn = this.sim.state.generator;
+        if (tankEmpty && generatorOn) {
+            this.sim.toggleGenerator();
+            this.sounds.generator.stop();
+            this.sounds.generatorEmpty.play();
         }
     }
 
@@ -64,6 +74,11 @@ class PlayState extends Phaser.State {
 
     deathBy(causes) {
         this.stopSim();
+
+        // also stop certain sounds
+        if (this.sounds.insanity.isPlaying) {
+            this.sounds.insanity.stop();
+        }
         console.log(`[play] died from ${causes.join()}`);
     }
 
