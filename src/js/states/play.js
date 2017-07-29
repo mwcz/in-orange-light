@@ -58,6 +58,10 @@ class PlayState extends Phaser.State {
             this.deathBy(this.sim.state.deathCauses);
         }
 
+        this.updateMeter('hunger');
+        this.updateMeter('sanity');
+        this.updateMeter('warmth');
+
         // if generator is on and fuel tank is empty
         const tankEmpty = this.sim.state.fuelInUse <= config.BOUNDS.fuelInUse[0];
         const generatorOn = this.sim.state.generator;
@@ -66,6 +70,18 @@ class PlayState extends Phaser.State {
             this.sounds.generator.stop();
             this.sounds.generatorEmpty.play();
         }
+    }
+
+    updateMeter(name) {
+        const tween = this.game.add.tween(this.sprites[`${name}Meter`]);
+        tween.to(
+            {
+                height: config.METER_HEIGHT * Math.max(0, Math.min(this.sim.state[name], 100)) / Math.min(config.BOUNDS[name][1], 100)
+            },
+            config.SIM_UPDATE_FREQUENCY,
+            Phaser.Easing.Elastic.Out
+        );
+        tween.start();
     }
 
     stopSim() {
@@ -86,14 +102,25 @@ class PlayState extends Phaser.State {
         this.sprites = {};
 
         this.sprites.background = this.game.add.sprite(0, 0, 'background');
-        this.sprites.mountain = this.game.add.sprite(0, 0, 'mountain');
-        this.sprites.cabin = this.game.add.sprite(0, 0, 'cabin');
-        this.sprites.cupboard = this.game.add.sprite(0, 0, 'cupboard');
-        this.sprites.fuel = this.game.add.sprite(0, 0, 'fuel');
-        this.sprites.generator = this.game.add.sprite(0, 0, 'generator');
-        this.sprites.heater = this.game.add.sprite(0, 0, 'heater');
-        this.sprites.you = this.game.add.sprite(0, 0, 'you');
-        this.sprites.chair = this.game.add.sprite(0, 0, 'chair');
+        this.sprites.mountain   = this.game.add.sprite(0, 0, 'mountain');
+        this.sprites.cabin      = this.game.add.sprite(0, 0, 'cabin');
+        this.sprites.cupboard   = this.game.add.sprite(0, 0, 'cupboard');
+        this.sprites.fuel       = this.game.add.sprite(0, 0, 'fuel');
+        this.sprites.generator  = this.game.add.sprite(0, 0, 'generator');
+        this.sprites.heater     = this.game.add.sprite(0, 0, 'heater');
+        this.sprites.you        = this.game.add.sprite(0, 0, 'you');
+        this.sprites.chair      = this.game.add.sprite(0, 0, 'chair');
+
+        // meter sprites
+        this.sprites.sanityMeter = this.game.add.sprite(this.game.world.width - 20,  this.game.world.height - 20, 'meter');
+        this.sprites.hungerMeter = this.game.add.sprite(this.game.world.width - 70,  this.game.world.height - 20, 'meter');
+        this.sprites.warmthMeter = this.game.add.sprite(this.game.world.width - 120, this.game.world.height - 20, 'meter');
+        this.sprites.sanityMeter.width = 40;
+        this.sprites.hungerMeter.width = 40;
+        this.sprites.warmthMeter.width = 40;
+        this.sprites.sanityMeter.anchor.set(1, 1);
+        this.sprites.hungerMeter.anchor.set(1, 1);
+        this.sprites.warmthMeter.anchor.set(1, 1);
 
         _.each(this.sprites, sprite => {
             sprite.inputEnabled = true;

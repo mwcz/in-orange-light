@@ -21,6 +21,7 @@ class PreloadState extends Phaser.State {
                 ['mountain', 'images/big/mountain.png'],
                 ['smoke', 'images/big/smoke.png'],
                 ['you', 'images/big/you.png'],
+                ['meter', 'images/meter.png'],
             ],
             spritesheet: [
                 // ['btn-play', 'images/big/button-play.png', 64*10, 24*10],

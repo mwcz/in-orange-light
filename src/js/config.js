@@ -6,6 +6,9 @@ const config = Object.freeze({
     CANVAS_WIDTH: 1600,
     CANVAS_HEIGHT: 1200,
 
+    METER_HEIGHT: 400,
+    SIM_UPDATE_FREQUENCY: 1 * Phaser.Timer.SECOND,
+
     INITIAL_STATE: {
         alive       : true,
         lamp        : false,
