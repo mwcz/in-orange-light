@@ -67,8 +67,9 @@ class PlayState extends Phaser.State {
         const generatorOn = this.sim.state.generator;
         if (tankEmpty && generatorOn) {
             this.sim.toggleGenerator();
-            this.sounds.generator.stop();
-            this.sounds.generatorEmpty.play();
+            this.sim.toggleHeater();
+            this.stopHeater();
+            this.stopGenerator(true);
         }
     }
 
@@ -82,6 +83,35 @@ class PlayState extends Phaser.State {
             Phaser.Easing.Elastic.Out
         );
         tween.start();
+    }
+
+    startHeater() {
+        this.sounds.heater.play();
+        const heaterOnTween = this.game.add.tween(this.sprites.heaterOn);
+        heaterOnTween.to({ alpha: 1 }, 1 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
+        heaterOnTween.start();
+    }
+
+    stopHeater() {
+        this.sounds.heater.stop();
+        this.sounds.heaterOff.play();
+        const heaterOffTween = this.game.add.tween(this.sprites.heaterOn);
+        heaterOffTween.to({ alpha: 0 }, 2 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
+        heaterOffTween.start();
+    }
+
+    startGenerator() {
+        this.sounds.generator.play();
+    }
+
+    stopGenerator(outOfFuel) {
+        this.sounds.generator.stop();
+        if (outOfFuel) {
+            this.sounds.generatorEmpty.play();
+        }
+        else {
+            this.sounds.generatorOff.play();
+        }
     }
 
     stopSim() {
@@ -102,14 +132,41 @@ class PlayState extends Phaser.State {
         this.sprites = {};
 
         this.sprites.background = this.game.add.sprite(0, 0, 'background');
+        this.sprites.mountain4  = this.game.add.sprite(0, 0, 'mountain4');
+        this.sprites.mountain3  = this.game.add.sprite(0, 0, 'mountain3');
+        this.sprites.mountain2  = this.game.add.sprite(0, 0, 'mountain2');
+        this.sprites.mountain1  = this.game.add.sprite(0, 0, 'mountain1');
         this.sprites.mountain   = this.game.add.sprite(0, 0, 'mountain');
         this.sprites.cabin      = this.game.add.sprite(0, 0, 'cabin');
         this.sprites.cupboard   = this.game.add.sprite(0, 0, 'cupboard');
         this.sprites.fuel       = this.game.add.sprite(0, 0, 'fuel');
-        this.sprites.generator  = this.game.add.sprite(0, 0, 'generator');
+        this.sprites.generator  = this.game.add.sprite(1285, 204, 'generator');
         this.sprites.heater     = this.game.add.sprite(0, 0, 'heater');
+        this.sprites.heaterOn   = this.game.add.sprite(0, 0, 'heater-on');
+        this.sprites.heaterGlow = this.game.add.sprite(0, 0, 'heater-glow');
         this.sprites.you        = this.game.add.sprite(0, 0, 'you');
         this.sprites.chair      = this.game.add.sprite(0, 0, 'chair');
+
+        // put stuff in cabin
+        this.cabinGroup = this.game.add.group();
+        this.cabinGroup.position.set(710, 400);
+        this.cabinGroup.addChild(this.sprites.cabin);
+        this.cabinGroup.addChild(this.sprites.heater);
+        this.cabinGroup.addChild(this.sprites.heaterOn);
+        this.cabinGroup.addChild(this.sprites.heaterGlow);
+        this.cabinGroup.addChild(this.sprites.fuel);
+        this.cabinGroup.addChild(this.sprites.you);
+        this.cabinGroup.addChild(this.sprites.chair);
+        this.cabinGroup.addChild(this.sprites.cupboard);
+
+        this.sprites.heater.anchor.set(0.5, 0.5);
+        this.sprites.heater.position.set(102, 346);
+        this.sprites.heaterOn.anchor.set(0.5, 0.5);
+        this.sprites.heaterOn.position.set(102, 346);
+
+        // hide heater on sprites
+        this.sprites.heaterOn.alpha = 0;
+        this.sprites.heaterGlow.alpha = 0;
 
         // meter sprites
         this.sprites.sanityMeter = this.game.add.sprite(this.game.world.width - 20,  this.game.world.height - 20, 'meter');
@@ -123,22 +180,24 @@ class PlayState extends Phaser.State {
         this.sprites.warmthMeter.anchor.set(1, 1);
 
         _.each(this.sprites, sprite => {
-            sprite.inputEnabled = true;
+            // sprite.inputEnabled = true;
             // sprite.input.enableDrag(true);
             // sprite.events.onDragStop.add(() => console.log(`${sprite.x}, ${sprite.y}`));
         });
+        this.sprites.heater.inputEnabled = true;
+        this.sprites.generator.inputEnabled = true;
+        this.sprites.cupboard.inputEnabled = true;
 
         // position the sprites individually
-        this.sprites.mountain.anchor.set(1, 1);
-        this.sprites.mountain.position.set(this.game.world.width, this.game.world.height);
-
-        this.sprites.cabin.position.set(880, 300);
-        this.sprites.generator.position.set(950, 630);
-        this.sprites.chair.position.set(1063, 430);
-        this.sprites.you.position.set(1047, 408);
-        this.sprites.heater.position.set(901, 437);
-        this.sprites.cupboard.position.set(954, 382);
-        this.sprites.fuel.position.set(1133, 426);
+        ['', '1', '2', '3', '4'].forEach(num => {
+            const sprite = this.sprites[`mountain${num}`]
+            sprite.anchor.set(1, 1);
+            let blurOffset = 0;
+            if (num >= 1) {
+                blurOffset = 10 * num;
+            }
+            sprite.position.set(this.game.world.width + blurOffset, this.game.world.height + blurOffset);
+        });
     }
 
     initEventHandlers() {
@@ -146,11 +205,10 @@ class PlayState extends Phaser.State {
         this.sprites.generator.events.onInputDown.add(this.sim.toggleGenerator, this.sim);
         this.sprites.generator.events.onInputDown.add(() => {
             if (this.sim.state.generator) {
-                this.sounds.generator.play();
+                this.startGenerator();
             }
             else {
-                this.sounds.generator.stop();
-                this.sounds.generatorOff.play();
+                this.stopGenerator(false);
             }
         });
 
@@ -163,11 +221,10 @@ class PlayState extends Phaser.State {
         }, this.sim);
         this.sprites.heater.events.onInputDown.add(() => {
             if (this.sim.state.heater) {
-                this.sounds.heater.play();
+                this.startHeater();
             }
             else {
-                this.sounds.heater.stop();
-                this.sounds.heaterOff.play();
+                this.stopHeater();
             }
         });
 

@@ -11,14 +11,20 @@ class PreloadState extends Phaser.State {
         const assetManifest = {
             image: [
                 ['logo', 'images/big/logo.png'],
-                ['background', 'images/big/background.png'],
-                ['cabin', 'images/big/cabin.png'],
+                ['background', 'images/background.png'],
+                ['cabin', 'images/cabin.png'],
                 ['chair', 'images/big/chair.png'],
                 ['cupboard', 'images/big/cupboard.png'],
                 ['fuel', 'images/big/fuel.png'],
-                ['generator', 'images/big/generator.png'],
-                ['heater', 'images/big/heater.png'],
-                ['mountain', 'images/big/mountain.png'],
+                ['generator', 'images/generator.png'],
+                ['heater', 'images/heater.png'],
+                ['heater-on', 'images/heater-on.png'],
+                ['heater-glow', 'images/heater-glow.png'],
+                ['mountain', 'images/mountain.png'],
+                ['mountain1', 'images/mountain1.png'],
+                ['mountain2', 'images/mountain2.png'],
+                ['mountain3', 'images/mountain3.png'],
+                ['mountain4', 'images/mountain4.png'],
                 ['smoke', 'images/big/smoke.png'],
                 ['you', 'images/big/you.png'],
                 ['meter', 'images/meter.png'],
@@ -40,6 +46,11 @@ class PreloadState extends Phaser.State {
         _.forEach(assetManifest, (assets, type) => {
             _.forEach(assets, args => this.game.load[type](...args));
         });
+
+        // filters
+
+        this.game.load.script('BlurX', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurX.js');
+        this.game.load.script('BlurY', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurY.js');
 
     }
 
