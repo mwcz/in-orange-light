@@ -10,12 +10,13 @@ class PreloadState extends Phaser.State {
 
         const assetManifest = {
             image: [
-                ['logo', 'images/big/logo.png'],
+                ['logo-on', 'images/logo-on.png'],
+                ['logo-off', 'images/logo-off.png'],
                 ['background', 'images/background.png'],
+                ['backdrop', 'images/backdrop.png'],
                 ['cabin', 'images/cabin.png'],
-                ['chair', 'images/big/chair.png'],
-                ['cupboard', 'images/big/cupboard.png'],
-                ['fuel', 'images/big/fuel.png'],
+                ['cupboard', 'images/cupboard.png'],
+                ['fuel', 'images/fuel.png'],
                 ['generator', 'images/generator.png'],
                 ['heater', 'images/heater.png'],
                 ['heater-on', 'images/heater-on.png'],
@@ -25,8 +26,8 @@ class PreloadState extends Phaser.State {
                 ['mountain2', 'images/mountain2.png'],
                 ['mountain3', 'images/mountain3.png'],
                 ['mountain4', 'images/mountain4.png'],
-                ['smoke', 'images/big/smoke.png'],
-                ['you', 'images/big/you.png'],
+                ['smoke', 'images/smoke.png'],
+                ['you', 'images/you.png'],
                 ['meter', 'images/meter.png'],
             ],
             spritesheet: [
@@ -49,8 +50,8 @@ class PreloadState extends Phaser.State {
 
         // filters
 
-        this.game.load.script('BlurX', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurX.js');
-        this.game.load.script('BlurY', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurY.js');
+        // this.game.load.script('BlurX', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurX.js');
+        // this.game.load.script('BlurY', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurY.js');
 
     }
 

@@ -9,6 +9,8 @@ class PlayState extends Phaser.State {
         this.startSim();
         this.drawInitialScene();
         this.initEventHandlers();
+
+        this.introText();
     }
 
     update() {
@@ -29,7 +31,7 @@ class PlayState extends Phaser.State {
     createSounds() {
         this.sounds = {
             music          : new Phaser.Sound(this.game , 'music'           , 1.0) ,
-            insanity       : new Phaser.Sound(this.game , 'insanity'        , 1.0, true) ,
+            starvation     : new Phaser.Sound(this.game , 'insanity'        , 1.0, true) ,
             heater         : new Phaser.Sound(this.game , 'heater'          , 1.0, true) ,
             heaterOff      : new Phaser.Sound(this.game , 'heater-off'      , 1.0) ,
             generator      : new Phaser.Sound(this.game , 'generator'       , 1.0, true) ,
@@ -38,29 +40,59 @@ class PlayState extends Phaser.State {
         };
     }
 
-    createTextBubble(text) {
+    introText() {
+        this.createTextBubble({
+            text: 'High atop a mountain peak\nin orange light\nhe dreamed',
+            speed: 40,
+        });
+    }
+
+    createTextBubble({ text='NO TEXT', speed=15, x=70, y=400, callback=_.noop }={}) {
         const textObj = this.game.add.text(
             0,
             0,
-            text,
+            '',
             {
                 // https://photonstorm.github.io/phaser-ce/Phaser.Text.html
-                font: '14px monospace',
-                fill: '#d7d7d7',
-                backgroundColor: '#070707',
-                boundsAlignH: 'center',
-                boundsAlignV: 'middle',
+                font: '24px monospace',
+                fill: '#4793D1',
+                backgroundColor: '#060C18',
+                // boundsAlignH: 'center',
+                // boundsAlignV: 'middle',
                 wordWrap: true,
-                wordWrapWidth: 400,
+                wordWrapWidth: 500,
             }
         );
-        textObj.position.set(100, 100);
+        textObj.position.set(x, y);
+
+        let i = 0;
+        const typing = this.game.time.events.repeat(
+            speed,
+            text.length,
+            () => {
+                textObj.setText(text.substr(0, i+1));
+                i += 1;
+            },
+            this
+        );
+
+        this.simPaused = true;
+
+        textObj.inputEnabled = true;
+        textObj.events.onInputDown.add(() => {
+            textObj.destroy(true);
+            this.simPaused = false;
+            callback.call(this);
+        }, this);
+
         return textObj;
     }
 
     startSim() {
         this.sim = new Sim();
         this.sim.print();
+
+        this.winTimer = this.game.time.events.add(config.WIN_TIME, this.win, this);
 
         this.simLoop = this.game.time.events.loop(
             1 * Phaser.Timer.SECOND,
@@ -69,7 +101,21 @@ class PlayState extends Phaser.State {
         );
     }
 
+    win() {
+        this.createTextBubble({
+            text: 'A warm front blows in.  Winter is over, and you have survived!',
+            speed: 40,
+            callback: this.toMenu,
+        });
+    }
+
+    toMenu() {
+        this.game.stateTransition.to('MenuState');
+    }
+
     updateSim() {
+        if (this.simPaused) return;
+
         // get the names of any actions that failed due to violating config.BOUNDS
         const { violations, stateChange } = this.sim.update();
         const violationProps = _.map(violations, 'prop');
@@ -78,9 +124,7 @@ class PlayState extends Phaser.State {
             this.deathBy(this.sim.state.deathCauses);
         }
 
-        this.updateMeter('hunger');
-        this.updateMeter('sanity');
-        this.updateMeter('warmth');
+        this.meterNames.forEach(meter => this.updateMeter(meter));
 
         // if generator is on and fuel tank is empty
         const tankEmpty = this.sim.state.fuelInUse <= config.BOUNDS.fuelInUse[0];
@@ -100,24 +144,57 @@ class PlayState extends Phaser.State {
                 height: config.METER_HEIGHT * Math.max(0, Math.min(this.sim.state[name], 100)) / Math.min(config.BOUNDS[name][1], 100)
             },
             config.SIM_UPDATE_FREQUENCY,
-            Phaser.Easing.Elastic.Out
+            Phaser.Easing.Cubic.Out
         );
         tween.start();
     }
 
     startHeater() {
         this.sounds.heater.play();
-        const heaterOnTween = this.game.add.tween(this.sprites.heaterOn);
-        heaterOnTween.to({ alpha: 1 }, 1 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
-        heaterOnTween.start();
+
+        this.heaterOnTween = this.game.add.tween(this.sprites.heaterOn);
+        this.heaterOnTween.to({ alpha: 1 }, 1 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
+        this.heaterOnTween.start();
+
+        this.heaterGlowTween = this.game.add.tween(this.sprites.heaterGlow);
+        this.heaterGlowTween.to({ alpha: 1 }, 1 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
+        this.heaterGlowTween.start();
+
+        this.heaterGlowTween.onComplete.add(() => {
+            this.heaterFlickerTween = this.game.add.tween(this.sprites.heaterGlow);
+            this.heaterFlickerTween.to(
+                {
+                    alpha: 0.7
+                },
+                1 * Phaser.Timer.SECOND,
+                Phaser.Easing.Bounce.In,
+                true,
+                0,
+                -1,
+                true
+            );
+            this.heaterFlickerTween.start();
+        }, this);
     }
 
     stopHeater() {
         this.sounds.heater.stop();
         this.sounds.heaterOff.play();
+
+        try {
+            // try/catch because these tweens may not exist
+            this.heaterOnTween.stop();
+            this.heaterGlowTween.stop();
+            this.heaterFlickerTween.stop();
+        } catch(e) {}
+
         const heaterOffTween = this.game.add.tween(this.sprites.heaterOn);
         heaterOffTween.to({ alpha: 0 }, 2 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
         heaterOffTween.start();
+
+        const heaterGlowOffTween = this.game.add.tween(this.sprites.heaterGlow);
+        heaterGlowOffTween.to({ alpha: 0 }, 1 * Phaser.Timer.SECOND, Phaser.Easing.Bounce.In);
+        heaterGlowOffTween.start();
     }
 
     startGenerator() {
@@ -142,10 +219,27 @@ class PlayState extends Phaser.State {
         this.stopSim();
 
         // also stop certain sounds
-        if (this.sounds.insanity.isPlaying) {
-            this.sounds.insanity.stop();
+        if (this.sounds.starvation.isPlaying) {
+            this.sounds.starvation.stop();
         }
-        console.log(`[play] died from ${causes.join()}`);
+
+        let message = '';
+        // for simplicity only mention the first cause of death
+        switch (causes[0]) {
+            case 'warmth':
+                message = 'The last remnant of warmth leaves your body.  Your role in the grand convection of the universe has ended.';
+                break;
+            case 'hunger':
+                message = 'Your stomch feels oddly calm, even as your strength fails.  You slip first into a deep sleep, then drift away.';
+                break;
+            default:
+                message = 'DIED BUT NO MESSAGE WAS GIVEN';
+        }
+        this.createTextBubble({
+            text: message,
+            speed: 40,
+            callback: this.toMenu,
+        });
     }
 
     drawInitialScene() {
@@ -158,46 +252,67 @@ class PlayState extends Phaser.State {
         this.sprites.mountain1  = this.game.add.sprite(0, 0, 'mountain1');
         this.sprites.mountain   = this.game.add.sprite(0, 0, 'mountain');
         this.sprites.cabin      = this.game.add.sprite(0, 0, 'cabin');
-        this.sprites.cupboard   = this.game.add.sprite(0, 0, 'cupboard');
-        this.sprites.fuel       = this.game.add.sprite(0, 0, 'fuel');
-        this.sprites.generator  = this.game.add.sprite(1285, 204, 'generator');
+        this.sprites.cupboard   = this.game.add.sprite(116, 183, 'cupboard');
+        this.sprites.fuel       = this.game.add.sprite(484, 319, 'fuel');
+        this.sprites.generator  = this.game.add.sprite(1285, 239, 'generator');
         this.sprites.heater     = this.game.add.sprite(0, 0, 'heater');
         this.sprites.heaterOn   = this.game.add.sprite(0, 0, 'heater-on');
         this.sprites.heaterGlow = this.game.add.sprite(0, 0, 'heater-glow');
-        this.sprites.you        = this.game.add.sprite(0, 0, 'you');
-        this.sprites.chair      = this.game.add.sprite(0, 0, 'chair');
+        this.sprites.you        = this.game.add.sprite(262, 275, 'you');
 
         // put stuff in cabin
         this.cabinGroup = this.game.add.group();
-        this.cabinGroup.position.set(710, 400);
+        this.cabinGroup.position.set(665, 448);
         this.cabinGroup.addChild(this.sprites.cabin);
         this.cabinGroup.addChild(this.sprites.heater);
         this.cabinGroup.addChild(this.sprites.heaterOn);
         this.cabinGroup.addChild(this.sprites.heaterGlow);
         this.cabinGroup.addChild(this.sprites.fuel);
         this.cabinGroup.addChild(this.sprites.you);
-        this.cabinGroup.addChild(this.sprites.chair);
         this.cabinGroup.addChild(this.sprites.cupboard);
 
         this.sprites.heater.anchor.set(0.5, 0.5);
-        this.sprites.heater.position.set(102, 346);
+        this.sprites.heater.position.set(117, 361);
         this.sprites.heaterOn.anchor.set(0.5, 0.5);
-        this.sprites.heaterOn.position.set(102, 346);
+        this.sprites.heaterOn.position.set(117, 361);
+        this.sprites.heaterGlow.position.set(-29, 17);
 
         // hide heater on sprites
         this.sprites.heaterOn.alpha = 0;
         this.sprites.heaterGlow.alpha = 0;
 
         // meter sprites
-        this.sprites.sanityMeter = this.game.add.sprite(this.game.world.width - 20,  this.game.world.height - 20, 'meter');
-        this.sprites.hungerMeter = this.game.add.sprite(this.game.world.width - 70,  this.game.world.height - 20, 'meter');
-        this.sprites.warmthMeter = this.game.add.sprite(this.game.world.width - 120, this.game.world.height - 20, 'meter');
-        this.sprites.sanityMeter.width = 40;
-        this.sprites.hungerMeter.width = 40;
-        this.sprites.warmthMeter.width = 40;
-        this.sprites.sanityMeter.anchor.set(1, 1);
-        this.sprites.hungerMeter.anchor.set(1, 1);
-        this.sprites.warmthMeter.anchor.set(1, 1);
+        this.meterGroup = this.game.add.group();
+        // add meters to group
+        this.meterNames = [/*'sanity',*/ 'hunger', 'food', 'warmth', 'fuelInUse', 'fuelReserve'];
+        this.meterNames.forEach(meterName => {
+            const sprite = this.game.add.sprite(0, 0, 'meter');
+            this.sprites[`${meterName}Meter`] = sprite;
+            sprite.anchor.set(1, 1);
+            sprite.alpha = 0.5;
+            this.meterGroup.addChild(sprite);
+        });
+        // add meter labels
+        this.meterNames.forEach(meterName => {
+            const text = this.game.add.text(
+                0,
+                0,
+                meterName.toUpperCase(),
+                {
+                    // https://photonstorm.github.io/phaser-ce/Phaser.Text.html
+                    font: 'bold 16px monospace',
+                    fill: '#4793D1',
+                }
+            );
+            text.anchor.set(1, 1);
+            this.meterGroup.addChild(text);
+        });
+        this.meterGroup.align(this.meterNames.length, 2, 70, 30, Phaser.BOTTOM_CENTER);
+        this.meterGroup.position.set(
+            this.game.world.width - 60 - this.meterGroup.width,
+            this.game.world.height - 60 - this.meterGroup.height
+            // this.game.world.centerX, this.game.world.centerY
+        );
 
         _.each(this.sprites, sprite => {
             // sprite.inputEnabled = true;
@@ -207,6 +322,9 @@ class PlayState extends Phaser.State {
         this.sprites.heater.inputEnabled = true;
         this.sprites.generator.inputEnabled = true;
         this.sprites.cupboard.inputEnabled = true;
+        this.sprites.fuel.inputEnabled = true;
+        this.sprites.you.inputEnabled = true;
+        this.sprites.cabin.inputEnabled = true;
 
         // position the sprites individually
         ['', '1', '2', '3', '4'].forEach(num => {
@@ -256,5 +374,20 @@ class PlayState extends Phaser.State {
 
         // refuel handlers
         this.sprites.fuel.events.onInputDown.add(this.sim.refuelGenerator, this.sim);
+
+        // highlight meters when hovering over certain sprites
+        this.sprites.generator.events.onInputOver.add(() => { this.sprites.fuelInUseMeter.alpha = 1 })
+        this.sprites.generator.events.onInputOut.add(() => { this.sprites.fuelInUseMeter.alpha = 0.5 })
+        this.sprites.fuel.events.onInputOver.add(() => { this.sprites.fuelReserveMeter.alpha = 1 })
+        this.sprites.fuel.events.onInputOut.add(() => { this.sprites.fuelReserveMeter.alpha = 0.5 })
+        this.sprites.fuel.events.onInputOver.add(() => { this.sprites.fuelInUseMeter.alpha = 1 })
+        this.sprites.fuel.events.onInputOut.add(() => { this.sprites.fuelInUseMeter.alpha = 0.5 })
+        this.sprites.heater.events.onInputOver.add(() => { this.sprites.warmthMeter.alpha = 1 })
+        this.sprites.heater.events.onInputOut.add(() => { this.sprites.warmthMeter.alpha = 0.5 })
+        this.sprites.cupboard.events.onInputOver.add(() => { this.sprites.foodMeter.alpha = 1 })
+        this.sprites.cupboard.events.onInputOut.add(() => { this.sprites.foodMeter.alpha = 0.5 })
+        this.sprites.cupboard.events.onInputOver.add(() => { this.sprites.hungerMeter.alpha = 1 })
+        this.sprites.cupboard.events.onInputOut.add(() => { this.sprites.hungerMeter.alpha = 0.5 })
+
     }
 }

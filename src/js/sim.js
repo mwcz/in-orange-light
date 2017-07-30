@@ -42,17 +42,19 @@ class Sim {
         // // update warmth
         // this.state.warmth += this.state.warmthSlope;
         const updateResults = this.applyStateChange(config.STATE_CHANGES.update, true);
-        document.querySelector('#debug').textContent = JSON.stringify(this.state, null, 4);
+        if (localStorage.debug) {
+            document.querySelector('#debug').textContent = JSON.stringify(this.state, null, 4);
+        }
         return updateResults;
     }
     endLife(deathCauses) {
         // set props to death states
         this.state.alive = false;
         this.state.hunger = 0;
-        this.state.sanity = 0;
+        // this.state.sanity = 0;
         this.state.warmth = 0;
         this.state.hungerSlope = 0;
-        this.state.sanitySlope = 0;
+        // this.state.sanitySlope = 0;
         this.state.warmthSlope = 0;
         this.state.deathCauses = deathCauses;
     }
