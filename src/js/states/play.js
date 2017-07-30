@@ -38,6 +38,26 @@ class PlayState extends Phaser.State {
         };
     }
 
+    createTextBubble(text) {
+        const textObj = this.game.add.text(
+            0,
+            0,
+            text,
+            {
+                // https://photonstorm.github.io/phaser-ce/Phaser.Text.html
+                font: '14px monospace',
+                fill: '#d7d7d7',
+                backgroundColor: '#070707',
+                boundsAlignH: 'center',
+                boundsAlignV: 'middle',
+                wordWrap: true,
+                wordWrapWidth: 400,
+            }
+        );
+        textObj.position.set(100, 100);
+        return textObj;
+    }
+
     startSim() {
         this.sim = new Sim();
         this.sim.print();
