@@ -10,7 +10,7 @@ const config = Object.freeze({
     SIM_UPDATE_FREQUENCY: 1 * Phaser.Timer.SECOND,
 
     // win after surviving this long
-    WIN_TIME: 60 * Phaser.Timer.SECOND,
+    WIN_TIME: 90,
 
     INITIAL_STATE: {
         alive       : true,
@@ -18,13 +18,13 @@ const config = Object.freeze({
         generator   : false,
         heater      : false,
         deathCauses : [],
-        food        : 12,
-        warmth      : 50,
+        food        : 8,
+        warmth      : 10,
         warmthSlope : -1,
         // sanity      : 50,
         // sanitySlope : 0,
-        fuelReserve : 20,
-        fuelInUse   : 50,
+        fuelReserve : 6,
+        fuelInUse   : 15,
         fuelSlope   : 0,
         hunger      : 0,
         hungerSlope : 1,
@@ -32,11 +32,11 @@ const config = Object.freeze({
 
     // how low or high state values are allowed to go
     BOUNDS: {
-        food: [0, Infinity],
-        warmth: [0, Infinity],
+        food: [-1, 8],
+        warmth: [-1, 10],
         // sanity: [0, Infinity],
-        fuelReserve: [0, Infinity],
-        fuelInUse: [0, 100],
+        fuelReserve: [-1, 6],
+        fuelInUse: [-1, 20],
         hunger: [-Infinity, 100],
         fuelSlope: [-Infinity, Infinity],
         // sanitySlope: [-Infinity, Infinity],
@@ -64,18 +64,18 @@ const config = Object.freeze({
             // sanitySlope : 1,
         },
         refuelGenerator: {
-            fuelReserve : -10,
-            fuelInUse   : 10,
+            fuelReserve : -1,
+            fuelInUse   : 4,
             // sanitySlope : 2,
         },
         heaterOn: {
             heater      : true,
-            warmthSlope : 3,
+            warmthSlope : 2,
             // sanitySlope : 1,
         },
         heaterOff: {
             heater      : false,
-            warmthSlope : -3,
+            warmthSlope : -2,
             // sanitySlope : -1,
         },
         generatorOn: {

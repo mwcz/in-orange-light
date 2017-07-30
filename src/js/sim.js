@@ -18,6 +18,9 @@ class Sim {
     }
     toggleGenerator() {
         if (this.state.generator) {
+            if (this.state.heater) {
+                this.applyStateChange(config.STATE_CHANGES.heaterOff);
+            }
             return this.applyStateChange(config.STATE_CHANGES.generatorOff);
         }
         else {
@@ -56,6 +59,8 @@ class Sim {
         this.state.hungerSlope = 0;
         // this.state.sanitySlope = 0;
         this.state.warmthSlope = 0;
+        this.state.fuelInUse = 0;
+        this.state.fuelReserve = 0;
         this.state.deathCauses = deathCauses;
     }
     checkStateChange(stateChange) {
@@ -111,10 +116,14 @@ class Sim {
     applyStateChange(stateChange, force) {
         const violations = this.checkStateChange(stateChange);
 
+        // don't allow dying from overheating
+        _.remove(violations, { prop: 'warmth', tooHigh: true });
+
         // catch any violations that cause death and react accordingly
         // if any of the props in violations also exist in config.DEATH_CAUSES, die
         const violationProps  = _.map(violations, 'prop');
         const deathCauses = _.intersection(violationProps, config.DEATH_CAUSES);
+
         if (deathCauses.length) {
             console.log(`[sim] dying due to ${JSON.stringify(deathCauses)}`);
             this.endLife(deathCauses);
@@ -144,8 +153,11 @@ class Sim {
                     }
                     else {
                         // if not boolean, check bounds and then assign
-                        const newValue = this.state[k] + change;
+                        let newValue = this.state[k] + change;
                         if (newValue >= config.BOUNDS[k][0] && newValue <= config.BOUNDS[k][1]) {
+                            if (k == 'hunger' && newValue < 0) {
+                                newValue = 0;
+                            }
                             this.state[k] = newValue;
                         }
                         else {

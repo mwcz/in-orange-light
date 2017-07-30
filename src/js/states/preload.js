@@ -12,7 +12,10 @@ class PreloadState extends Phaser.State {
             image: [
                 ['logo-on', 'images/logo-on.png'],
                 ['logo-off', 'images/logo-off.png'],
+                ['play-on', 'images/play-on.png'],
+                ['play-off', 'images/play-off.png'],
                 ['background', 'images/background.png'],
+                ['sky', 'images/sky.png'],
                 ['backdrop', 'images/backdrop.png'],
                 ['cabin', 'images/cabin.png'],
                 ['cupboard', 'images/cupboard.png'],
@@ -36,6 +39,8 @@ class PreloadState extends Phaser.State {
             audio: [
                 ['music', 'sounds/melody.wav'],
                 ['insanity', 'sounds/insanity.wav'],
+                ['refuel', 'sounds/refuel.wav'],
+                ['nom', 'sounds/nom.wav'],
                 ['heater', 'sounds/heater.wav'],
                 ['heater-off', 'sounds/heater-off.wav'],
                 ['generator', 'sounds/generator.wav'],

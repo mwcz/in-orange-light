@@ -13,12 +13,12 @@ class MenuState extends Phaser.State {
         this.music.play();
 
         const bg = this.game.add.sprite(0, 0, 'backdrop');
-        bg.tint = 0x3f3f3f;
+        bg.tint = 0x7f7f7f;
 
-        const logoOff = this.game.add.sprite(this.game.world.centerX, 150, 'logo-off');
+        const logoOff = this.game.add.sprite(this.game.world.centerX, 160, 'logo-off');
         logoOff.anchor.set(0.5, 0.5);
 
-        const logoOn = this.game.add.sprite(this.game.world.centerX, 150, 'logo-on');
+        const logoOn = this.game.add.sprite(this.game.world.centerX, 160, 'logo-on');
         logoOn.anchor.set(0.5, 0.5);
         logoOn.alpha = 0;
 
@@ -42,21 +42,26 @@ class MenuState extends Phaser.State {
             this.heaterFlickerTween.start();
         }, this);
 
-        const btnHum = this.game.add.button(
-            this.game.world.centerX,
-            this.game.world.height - 130,
-            'logo',
-            this.next,
-            this,
-            1, // over
-            0, // out
-            2  // down
-        );
-        btnHum.anchor.set(0.5, 1);
-        btnHum.input.useHandCursor = false;
+        const playOff = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 250, 'play-off');
+        playOff.anchor.set(0.5, 0.5);
+
+        this.playOn = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 250, 'play-on');
+        this.playOn.anchor.set(0.5, 0.5);
+        this.playOn.alpha = 0;
+        this.playOn.inputEnabled = true;
+        this.playOn.input.useHandCursor = true;
+        this.playOn.events.onInputDown.add(this.next, this);
+
+        this.heaterSound = new Phaser.Sound(this.game, 'heater', 1.0, true);
+        this.heaterOffSound = new Phaser.Sound(this.game, 'heater-off', 1.0);
+        // this.heaterSound.play();
+        this.heaterOffSound.play();
     }
 
     update() {
+        const mouseDist = Phaser.Point.distance(this.playOn.position, this.game.input);
+        // console.log(mouseDist);
+        this.playOn.alpha = 1 - mouseDist/600;
     }
 
     next() {
@@ -64,7 +69,9 @@ class MenuState extends Phaser.State {
     }
 
     shutdown() {
-        this.music.stop();
+        this.heaterSound.stop();
+        this.heaterOffSound.stop();
+        // this.music.stop();
     }
 
 }

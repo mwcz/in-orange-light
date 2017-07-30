@@ -17,7 +17,10 @@
    id="svg8"
    sodipodi:docname="scene.svg"
    inkscape:version="0.92+devel unknown"
-   shape-rendering="crispEdges">
+   shape-rendering="crispEdges"
+   inkscape:export-filename="/home/mwc/projects/in-orange-light/src/images/backdrop.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2">
     <linearGradient
@@ -290,10 +293,10 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="1062.1875"
-     inkscape:cy="729.18662"
+     inkscape:cx="293.63774"
+     inkscape:cy="559.23467"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer4"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
@@ -402,7 +405,7 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="clouds"
-     style="display:none">
+     style="display:inline">
     <path
        style="fill:#c9d7f2;fill-opacity:0.17631686;stroke:none;stroke-width:0.88214844;stroke-linejoin:round;filter:url(#filter4378)"
        d="m 218.18985,180.90998 c 2e-5,3.39474 -38.80737,6.14672 -86.67872,6.14672 -47.871346,0 -86.678739,-2.75198 -86.678724,-6.14672 -6e-6,-1.39292 6.53359,-2.67762 17.546088,-3.7084 15.826532,-1.48138 40.903696,-2.43832 69.132636,-2.43832 47.87135,0 86.67874,2.75198 86.67872,6.14672 z"
@@ -416,12 +419,25 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="mountain0"
-     style="display:inline">
+     inkscape:label="mountain w/ cable"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer17"
+     inkscape:label="mountain w/o cable">
     <g
+       style="display:inline"
        id="g4645"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
+      <path
+         style="fill:#060c18;fill-opacity:1;stroke:none;stroke-width:1.01295745;stroke-linejoin:round"
+         d="M 423.33333,61.590787 V 317.49999 l -259.9946,10e-6 c 70.09298,-23.28728 130.14916,-126.56378 169.98059,-196.11973 3.05181,-5.32926 4.97282,8.95055 7.79548,3.82153 24.25784,-44.078811 39.9175,-79.52313 44.65174,-85.019114 1.46291,-1.46291 7.26873,5.422585 9.71501,6.32143 1.30204,0.478413 3.75438,-4.610103 4.80472,-3.863555 8.84697,6.288147 16.04304,18.950226 23.04706,18.950226 z"
+         id="path4647"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccsscssc"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
       <path
          inkscape:export-ydpi="96"
          inkscape:export-xdpi="96"
@@ -431,27 +447,15 @@
          d="M 423.33333,61.590787 V 317.49999 l -259.9946,10e-6 c 70.09298,-23.28728 130.14916,-126.56378 169.98059,-196.11973 3.05181,-5.32926 4.97282,8.95055 7.79548,3.82153 24.25784,-44.078811 39.9175,-79.52313 44.65174,-85.019114 1.46291,-1.46291 7.26873,5.422585 9.71501,6.32143 1.30204,0.478413 3.75438,-4.610103 4.80472,-3.863555 8.84697,6.288147 16.04304,18.950226 23.04706,18.950226 z"
          style="fill:#060c18;fill-opacity:1;stroke:none;stroke-width:1.01295745;stroke-linejoin:round" />
       <path
-         sodipodi:nodetypes="cccsc"
-         inkscape:connector-curvature="0"
-         id="path4632"
-         d="m 364.66195,107.22299 c 0,0 6.78163,2.88597 6.28348,11.43581 -2.08293,15.10166 -12.27682,36.06198 -21.96878,32.18219 -6.84472,-3.14421 -3.6374,-21.89689 -9.3346,-24.6387 -0.96554,-0.46467 -2.55925,1.11139 -2.55925,1.11139"
-         style="fill:none;stroke:#c83737;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         sodipodi:nodetypes="caaccc"
-         inkscape:connector-curvature="0"
-         id="path4634"
-         d="m 324.43346,139.86266 c 0,0 -2.82177,0.89487 -3.06261,2.11118 -0.71323,3.602 3.34647,6.70143 6.0028,9.23659 4.03274,3.84876 13.82293,2.90783 14.43254,8.44898 -0.18446,3.44528 -5.21572,6.37663 -7.74031,7.8342 -3.01032,1.73801 -5.75906,0.612 -5.75906,0.612"
-         style="fill:none;stroke:#c83737;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
          inkscape:connector-curvature="0"
          id="path4636"
          d="m 339.6502,126.36587 -0.76399,-0.52854 -2.4235,-0.13289 -0.38388,2.5849 2.25901,0.84173 z"
-         style="fill:#060c18;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
+         style="fill:#060c18;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
          inkscape:connector-curvature="0"
          id="path4638"
          d="m 322.14857,140.79083 -0.53758,0.92788 1.53762,0.20138 2.24436,-0.68361 -0.96123,-1.72593 -2.07831,1.06739 z"
-         style="fill:#060c18;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
+         style="fill:#060c18;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
   </g>
   <g
@@ -666,9 +670,10 @@
   <g
      inkscape:groupmode="layer"
      id="layer15"
-     inkscape:label="smoke">
+     inkscape:label="smoke"
+     style="display:inline">
     <circle
-       style="opacity:0.98999999;fill:#1c2422;fill-opacity:0.12017772;stroke:none;stroke-width:1.10000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:0.98999999;fill:#1c2422;fill-opacity:0.12017774;stroke:none;stroke-width:1.10000002;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="smoke"
        cx="319.84335"
        cy="69.153267"
@@ -722,7 +727,7 @@
     </g>
   </g>
   <g
-     style="display:none"
+     style="display:inline"
      inkscape:label="heater on"
      id="g4934"
      inkscape:groupmode="layer">
@@ -766,7 +771,7 @@
      inkscape:groupmode="layer"
      id="layer11"
      inkscape:label="heater glow"
-     style="display:none">
+     style="display:inline">
     <g
        id="g6058"
        inkscape:export-xdpi="96"
@@ -792,7 +797,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer12"
-     inkscape:label="fuel can">
+     inkscape:label="fuel can"
+     style="display:inline">
     <g
        id="g4463"
        inkscape:export-xdpi="96"
@@ -838,7 +844,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer13"
-     inkscape:label="cupboard">
+     inkscape:label="cupboard"
+     style="display:inline">
     <g
        id="g4609"
        inkscape:export-filename="/home/mwc/cupboard.png"
@@ -876,7 +883,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer14"
-     inkscape:label="you">
+     inkscape:label="you"
+     style="display:inline">
     <g
        id="g4589"
        inkscape:label="#you"
