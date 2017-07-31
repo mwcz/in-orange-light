@@ -1,6 +1,8 @@
-# Game template
+# In Orange Light
 
-A very basic template project for developing Phaser games.  Develop in ES6 (except modules) locally, with *no build*, and compile to ES5 for deployment.
+My compo game for Ludum Dare 39.
+
+![](https://raw.githubusercontent.com/mwcz/in-orange-light/master/logo.png)
 
 ## Setup
 
