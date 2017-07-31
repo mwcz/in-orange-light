@@ -10,7 +10,7 @@ const config = Object.freeze({
     SIM_UPDATE_FREQUENCY: 1 * Phaser.Timer.SECOND,
 
     // win after surviving this long
-    WIN_TIME: 80,
+    WIN_TIME: 75,
 
     INITIAL_STATE: {
         alive       : true,
