@@ -9,9 +9,6 @@ class MenuState extends Phaser.State {
             this.next();
         }
 
-        this.music = this.game.add.audio('MenuMusic', 0.7, true);
-        this.music.play();
-
         const bg = this.game.add.sprite(0, 0, 'backdrop');
         bg.tint = 0x7f7f7f;
 
@@ -30,7 +27,7 @@ class MenuState extends Phaser.State {
             this.heaterFlickerTween = this.game.add.tween(logoOn);
             this.heaterFlickerTween.to(
                 {
-                    alpha: 0.7
+                    alpha: 0.5
                 },
                 1 * Phaser.Timer.SECOND,
                 Phaser.Easing.Bounce.In,
@@ -54,14 +51,17 @@ class MenuState extends Phaser.State {
 
         this.heaterSound = new Phaser.Sound(this.game, 'heater', 1.0, true);
         this.heaterOffSound = new Phaser.Sound(this.game, 'heater-off', 1.0);
-        // this.heaterSound.play();
+        this.heaterSound.volume = 0;
+        this.heaterSound.play();
         this.heaterOffSound.play();
     }
 
     update() {
         const mouseDist = Phaser.Point.distance(this.playOn.position, this.game.input);
         // console.log(mouseDist);
-        this.playOn.alpha = 1 - mouseDist/600;
+        const closeness = 1 - mouseDist/600;
+        this.playOn.alpha = closeness;
+        this.heaterSound.volume = closeness;
     }
 
     next() {
@@ -71,7 +71,6 @@ class MenuState extends Phaser.State {
     shutdown() {
         this.heaterSound.stop();
         this.heaterOffSound.stop();
-        // this.music.stop();
     }
 
 }

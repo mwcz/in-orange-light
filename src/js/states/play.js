@@ -319,14 +319,17 @@ An aging diesel generator powers a space heater, your only source of warmth.  Ca
             -1
         );
         skyTween.onUpdateCallback(() => {
-            const y = Math.floor(Math.abs(-this.sprites.sky.position.y + 1/2*this.game.world.height) % this.sprites.sky.height);
-            const color = this.skyBMD.getPixelRGB(20, y).color;
+            const y = Math.floor(Math.abs(this.sprites.sky.position.y + 1/8*this.game.world.height) % this.sprites.sky.height);
+            // const y = Math.floor(Math.abs(-this.sprites.sky.position.y));
+            const color = this.skyBMD.getPixel32(20, y);
             // console.log(`maybe it is ${y}, ${color}`);
-            state.sprites.mountain.tint = color;
-            state.sprites.you.tint = color;
-            state.sprites.generator.tint = color;
-            state.sprites.cupboard.tint = color;
-            state.sprites.fuel.tint = color;
+            this.sprites.mountain.tint = color;
+            this.sprites.cabin.tint = color;
+            this.sprites.you.tint = color;
+            this.sprites.generator.tint = color;
+            this.sprites.cupboard.tint = color;
+            this.sprites.fuel.tint = color;
+            this.sprites.heater.tint = color;
         }, this);
         const sky2Tween = this.game.add.tween(this.sprites.sky2);
         sky2Tween.to(
@@ -373,11 +376,15 @@ An aging diesel generator powers a space heater, your only source of warmth.  Ca
             this.meterGroup.addChild(sprite);
         });
         // add meter labels
+        const meterNameMap = {
+            fuelInUse: 'GENER',
+            fuelReserve: 'TANK',
+        };
         this.meterNames.forEach(meterName => {
             const text = this.game.add.text(
                 0,
                 0,
-                meterName.toUpperCase(),
+                (meterNameMap[meterName] || meterName).toUpperCase(),
                 {
                     // https://photonstorm.github.io/phaser-ce/Phaser.Text.html
                     font: 'bold 16px monospace',
