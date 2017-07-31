@@ -59,7 +59,7 @@ class MenuState extends Phaser.State {
     update() {
         const mouseDist = Phaser.Point.distance(this.playOn.position, this.game.input);
         // console.log(mouseDist);
-        const closeness = 1 - mouseDist/600;
+        const closeness = this.game.math.clamp(1 - mouseDist/600, 0, 1);
         this.playOn.alpha = closeness;
         this.heaterSound.volume = closeness;
     }
