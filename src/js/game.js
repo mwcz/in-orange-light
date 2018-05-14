@@ -4,7 +4,7 @@ class Game extends Phaser.Game {
             config.CANVAS_WIDTH,
             config.CANVAS_HEIGHT,
             Phaser.AUTO,
-            'phaser-game',
+            document.querySelector('#iol-sky-demo'),
             null,
             false,
             false

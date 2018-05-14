@@ -3,8 +3,8 @@ const config = Object.freeze({
     AUTO_PLAY: !true,
 
     // canvas resolution
-    CANVAS_WIDTH: 1600,
-    CANVAS_HEIGHT: 1200,
+    CANVAS_WIDTH: 200,
+    CANVAS_HEIGHT: 600,
 
     METER_HEIGHT: 100,
     SIM_UPDATE_FREQUENCY: 1 * Phaser.Timer.SECOND,

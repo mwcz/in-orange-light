@@ -10,44 +10,12 @@ class PreloadState extends Phaser.State {
 
         const assetManifest = {
             image: [
-                ['logo-on', 'images/logo-on.png'],
-                ['logo-off', 'images/logo-off.png'],
-                ['play-on', 'images/play-on.png'],
-                ['play-off', 'images/play-off.png'],
-                ['background', 'images/background.png'],
                 ['sky', 'images/sky.png'],
-                ['backdrop', 'images/backdrop.png'],
-                ['cabin', 'images/cabin.png'],
-                ['cabin-mask', 'images/cabin-mask.png'],
-                ['cupboard', 'images/cupboard.png'],
-                ['fuel', 'images/fuel.png'],
-                ['generator', 'images/generator.png'],
-                ['heater', 'images/heater.png'],
-                ['heater-on', 'images/heater-on.png'],
-                ['heater-glow', 'images/heater-glow.png'],
                 ['mountain', 'images/mountain.png'],
-                ['mountain-mask', 'images/mountain-mask.png'],
                 ['mountain1', 'images/mountain1.png'],
                 ['mountain2', 'images/mountain2.png'],
                 ['mountain3', 'images/mountain3.png'],
                 ['mountain4', 'images/mountain4.png'],
-                ['smoke', 'images/smoke.png'],
-                ['you', 'images/you.png'],
-                ['meter', 'images/meter.png'],
-            ],
-            spritesheet: [
-                // ['btn-play', 'images/big/button-play.png', 64*10, 24*10],
-            ],
-            audio: [
-                ['music', 'sounds/melody.wav'],
-                ['insanity', 'sounds/insanity.wav'],
-                ['refuel', 'sounds/refuel.wav'],
-                ['nom', 'sounds/nom.wav'],
-                ['heater', 'sounds/heater.wav'],
-                ['heater-off', 'sounds/heater-off.wav'],
-                ['generator', 'sounds/generator.wav'],
-                ['generator-empty', 'sounds/generator-empty.wav'],
-                ['generator-off', 'sounds/generator-off.wav'],
             ],
         };
 
@@ -63,7 +31,7 @@ class PreloadState extends Phaser.State {
     }
 
     create() {
-        this.state.start('MenuState');
+        this.state.start('PlayState');
     }
 }
 

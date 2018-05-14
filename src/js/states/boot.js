@@ -29,10 +29,6 @@ class BootState extends Phaser.State {
             },
         });
 
-        const credits = document.createElement('div');
-        credits.id = 'credits';
-        credits.innerHTML = 'Created in 48 hours for the Ludum Dare 39 compo by <a href="https://palebluepixel.org">Michael Clayton</a>.  Worked solo this time, but normally a member of team <a href="http://scripta.co">Scripta</a>.';
-        document.body.appendChild(credits);
     }
 
     updateCanvasSize() {
